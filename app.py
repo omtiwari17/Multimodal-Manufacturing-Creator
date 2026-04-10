@@ -1,7 +1,6 @@
 import streamlit as st
 import google.generativeai as genai
 from urllib.parse import quote
-
 import requests
 from PIL import Image
 from io import BytesIO
@@ -12,11 +11,11 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🏭 Multimodal Manufacturing Creator")
+st.title("Multimodal Manufacturing Creator")
 st.caption("Enter a manufacturing concept → get a technical narrative (LLM) + visual prototype (Image Generation)")
 
 # Sidebar
-with st.sidebar:    
+with st.sidebar:
     st.markdown("## ⚙️ Settings")
     api_key = st.text_input("Gemini API Key", type="password", help="Stored only for this session.")
     st.markdown("---")
@@ -33,8 +32,7 @@ with st.sidebar:
     st.markdown("2. **Gemini LLM** → technical narrative")
     st.markdown("3. **Flux Image Model** → visual prototype")
     st.markdown("---")
-    st.markdown("**Group 01D6** | Datagami SBC 2025-26")
-    st.markdown("Mentor: Prof. Akshay Saxena")
+    st.markdown("**Group 01D6**")
 
 # Example concepts
 examples = [
@@ -61,14 +59,12 @@ with col_example:
     if selected != "— select —":
         concept = selected
 
-generate = st.button("🚀 Generate", type="primary", disabled=not api_key.strip())
+generate = st.button(" Generate", type="primary", disabled=not api_key.strip())
 
 if not api_key.strip():
     st.info("👈 Enter your Gemini API key in the sidebar to get started.")
-    st.stop()
 
-if generate and concept:
-
+elif generate and concept:
     col1, col2 = st.columns(2)
 
     with col1:
@@ -116,13 +112,37 @@ Keep it professional, concise, and educational. Total: ~200 words."""
             except Exception as e:
                 st.error(f"Image Error: {e}")
 
-    # Explanation section
-    st.divider()
-    st.subheader("How this demonstrates Multimodal GenAI")
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.info("**Input**\nSingle text prompt describing a manufacturing concept")
-    with c2:
-        st.info("**Text-to-Text**\nGemini LLM generates a domain-specific technical narrative with structured sections")
-    with c3:
-        st.info("**Text-to-Image**\nFlux diffusion model renders a high-fidelity visual prototype from the same prompt")
+# Workflow always visible at bottom
+st.divider()
+st.subheader("Multimodal GenAI Workflow")
+
+# Row 1 - single input
+col_space1, col_center, col_space2 = st.columns([1, 2, 1])
+with col_center:
+    st.info("💬 **USER INPUT**\n\nSingle manufacturing concept prompt")
+
+# Row 2 - splits into two (Centered using HTML with 15px vertical padding)
+st.markdown("<div style='text-align: center; padding: 15px 0;'>⬇️ same prompt feeds both models ⬇️</div>", unsafe_allow_html=True)
+
+col1, col_mid, col2 = st.columns([2, 0.2, 2])
+with col1:
+    st.success("🤖 **MODEL 1 — Text-to-Text**\n\nGemini 2.5 Flash (LLM)\n\nGenerates structured technical narrative")
+with col2:
+    st.warning("🎨 **MODEL 2 — Text-to-Image**\n\nFlux via Pollinations.ai\n\nGenerates visual prototype / illustration")
+
+# Row 3 - arrows (Using the exact same column ratio to perfectly center them over the outputs)
+arr1, arr_mid, arr2 = st.columns([2, 0.2, 2])
+with arr1:
+    st.markdown("<div style='text-align: center; padding: 15px 0;'>⬇️</div>", unsafe_allow_html=True)
+with arr2:
+    st.markdown("<div style='text-align: center; padding: 15px 0;'>⬇️</div>", unsafe_allow_html=True)
+
+# Row 4 - outputs
+col3, col_mid2, col4 = st.columns([2, 0.2, 2])
+with col3:
+    st.error("📄 **OUTPUT 1 — Technical Narrative**\n\nOverview · Working Principle · Components · Applications · Advantages")
+with col4:
+    st.error("🖼️ **OUTPUT 2 — Visual Prototype**\n\nAI-generated engineering illustration of the concept")
+
+st.divider()
+st.caption("**Multimodal** = one prompt → two different AI model types → richer combined output than either model alone")
