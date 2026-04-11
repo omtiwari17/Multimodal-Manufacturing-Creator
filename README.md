@@ -114,7 +114,7 @@ User Input (manufacturing concept prompt)
   (5-section structured text)           (Engineering illustration)
 ```
 
-Both models receive the same prompt and run independently — neither depends on the output of the other.
+Both models receive the same prompt and run independently neither depends on the output of the other.
 
 ---
 
